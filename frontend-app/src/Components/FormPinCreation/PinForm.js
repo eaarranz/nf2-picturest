@@ -17,7 +17,6 @@ const PinForm = (props) => {
     const [created, setCreated] = React.useState(undefined);
 
     const handleInputChange = event => {
-        console.log(event)
         setData({
             ...data,
             [event.target.name]: event.target.value

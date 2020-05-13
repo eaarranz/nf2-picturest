@@ -6,11 +6,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class PinsController extends Controller
 {
     public function create(Request $request) {
         $data = $request->all();
+
+        $pinValidator = Validator::make($data, [
+            'name' => ['required', 'string', 'max:255', 'min:4'],
+            'description' => ['required', 'string','max:255', 'min:4'],
+            'board_id' => ['required'],
+            'img_url' => ['required'],
+        ]);
+
+        if($pinValidator->fails()) {
+            $errors = $pinValidator->errors()->getMessages();
+            $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+            return response()->json(['error' => $errors, 'code' => $code], $code);
+        }
 
         $pin = Pin::create([
             'name' => $data['name'],
